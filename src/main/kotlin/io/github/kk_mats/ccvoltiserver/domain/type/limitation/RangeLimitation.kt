@@ -1,46 +1,61 @@
 package io.github.kk_mats.ccvoltiserver.domain.type.limitation
 
+import io.github.kk_mats.ccvoltiserver.common.orUndefined
 import io.github.kk_mats.ccvoltiserver.domain.type.*
 
 
-class RangeLimitation(
-		label: Label, private val min: Double?, private val max: Double?, private val default: Double?
-) : Limitation<Double>(label) {
+class RangeLimitation<T : Comparable<T>>(
+		label: Label, private val min: T?, private val max: T?, private val default: T?
+) : Limitation<T>(label) {
 	init {
 		if (this.default != null) {
 			if (this.min != null) {
 				require(this.min <= this.default) {
-					FailureCode.parameterDefaultOutOfRange(this.label.name, this.default, this.min, this.max)
+					FailureCode.parameterDefaultOutOfRange(this.label, this.default, this.min, this.max)
 				}
 			}
 			if (this.max != null) {
 				require(this.default <= this.max) {
-					FailureCode.parameterDefaultOutOfRange(this.label.name, this.default, this.min, this.max)
+					FailureCode.parameterDefaultOutOfRange(this.label, this.default, this.min, this.max)
 				}
 			}
 		} else if (this.min != null && this.max != null) {
 			require(this.min < this.max) {
-				FailureCode.invalidParameterRange(this.label.name, this.min, this.max)
+				FailureCode.invalidParameterRange(this.label, this.min, this.max)
 			}
 		}
 	}
 
-	override fun validate(value: Double?): Failable<Boolean> {
+	override fun validate(value: T?): Failable<T> {
 		if (value == null) {
 			return when {
-				this.default != null -> succeed(true)
-				else -> fail(FailureCode.parameterUndefinedWithoutDefault(this.label.name))
+				this.default != null -> succeed(this.default)
+				else -> fail(FailureCode.parameterUndefinedWithoutDefault(this.label))
 			}
 		}
 
 		if (this.min != null && value < this.min) {
-			return fail(FailureCode.parameterOutOfRange(this.label.name, value, this.min, this.max))
+			return fail(FailureCode.parameterOutOfRange(this.label, value, this.min, this.max))
 		}
 
 		if (this.max != null && this.max < value) {
-			return fail(FailureCode.parameterOutOfRange(this.label.name, value, this.min, this.max))
+			return fail(FailureCode.parameterOutOfRange(this.label, value, this.min, this.max))
 		}
 
-		return succeed(true)
+		return succeed(value)
 	}
+
+	override fun toString(): String {
+		return """
+			|@rangeParameter=${this.label.name}
+			|   name: ${this.label.name}
+			|   slug: ${this.label.slug}
+			|   option: ${this.label.option}
+			|   range:
+			|       min: ${orUndefined(this.min)}
+			|       max: ${orUndefined(this.max)}
+			|       default: ${orUndefined(this.default)}
+		""".trimMargin()
+	}
+
 }
