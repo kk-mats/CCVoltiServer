@@ -5,14 +5,14 @@ import com.fasterxml.jackson.annotation.JsonInclude
 data class Failure(val code: String, val message: String)
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-class Failable<T : Any> private constructor(val error: Failure?, val value: T?) {
-	internal constructor(error: Failure) : this(error, null)
+class Failable<T : Any> private constructor(val failure: Failure?, val value: T?) {
+	internal constructor(failure: Failure) : this(failure, null)
 	internal constructor(value: T) : this(null, value)
 
 	fun <R : Any> delegate(): Failable<R> {
-		check(this.error != null) { "Failable.delegate called when it is not failed" }
+		check(this.failure != null) { "Failable.delegate called when it is not failed" }
 
-		return fail(this.error)
+		return fail(this.failure)
 	}
 }
 
