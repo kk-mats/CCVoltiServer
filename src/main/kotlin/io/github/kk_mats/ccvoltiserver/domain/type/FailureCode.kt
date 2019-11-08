@@ -1,38 +1,53 @@
 package io.github.kk_mats.ccvoltiserver.domain.type
 
 object FailureCode {
-	fun parameterUndefinedWithoutDefault(parameterNameLabel: String) = Failure(
+	fun parameterUndefinedWithoutDefault(label: Label) = Failure(
 			"PARAMETER_UNDEFINED_WITHOUT_DEFAULT",
-			"@${parameterNameLabel}: undefined without default value"
+			"@${label}: undefined without default value"
 	)
 
-	fun parameterOutOfRange(parameterNameLabel: String, value: Double, min: Double?, max: Double?) = Failure(
+	fun <T> parameterOutOfRange(label: Label, value: T, min: T?, max: T?) = Failure(
 			"PARAMETER_OUT_OF_RANGE",
-			"@${parameterNameLabel}: \"$value\" is out of range [${min ?: "undefined"}, ${max ?: "undefined"}]"
+			"@${label}: \"$value\" is out of range [${min ?: "undefined"}, ${max ?: "undefined"}]"
 	)
 
-	fun invalidRangeParameterType(parameterNameLabel: String, value: String) = Failure(
+	fun invalidRangeParameterType(label: Label, value: String) = Failure(
 			"INVALID_RANGE_PARAMETER_TYPE",
-			"@${parameterNameLabel}: type of \"$value\" is not acceptable"
+			"@${label}: type of \"$value\" is not acceptable"
 	)
 
-	fun invalidParameterRange(parameterNameLabel: String, min: Double?, max: Double?) = Failure(
+	fun <T> invalidParameterRange(label: Label, min: T?, max: T?) = Failure(
 			"PARAMETER_OUT_OF_RANGE",
-			"@${parameterNameLabel}: invalid range [${min ?: "undefined"}, ${max ?: "undefined"}]"
+			"@${label}: invalid range [${min ?: "undefined"}, ${max ?: "undefined"}]"
 	)
 
-	fun parameterDefaultOutOfRange(parameterNameLabel: String, value: Double, min: Double?, max: Double?) = Failure(
+	fun <T> parameterDefaultOutOfRange(label: Label, value: T, min: T?, max: T?) = Failure(
 			"PARAMETER_DEFAULT_OUT_OF_RANGE",
-			"@${parameterNameLabel}: \"$value\" is out of range [${min ?: "undefined"}, ${max ?: "undefined"}]"
+			"@${label}: \"$value\" is out of range [${min ?: "undefined"}, ${max ?: "undefined"}]"
 	)
 
-	fun <T> parameterNotContained(parameterNameLabel: String, value: T) = Failure(
+	fun <T> parameterNotContained(label: Label, value: T) = Failure(
 			"PARAMETER_NOT_CONTAINED",
-			"@${parameterNameLabel}: \"$value\" is not contained in variants"
+			"@${label}: \"$value\" is not contained in variants"
 	)
 
-	fun unknownParameterEncountered(vararg parameterNameLabels: String) = Failure(
+	fun parameterDefaultNotMatched(label: Label, regex: Regex, default: String) = Failure(
+			"PARAMETER_DEFAULT_NOT_MATCHED",
+			"@${label}: default value \"${default}\" is not matched by the regex pattern \"${regex.pattern}\""
+	)
+
+	fun parameterNotMatched(label: Label, regex: Regex, value: String) = Failure(
+			"PARAMETER_DEFAULT_NOT_MATCHED",
+			"@${label}: value \"${value}\" is not matched by the regex pattern \"${regex.pattern}\""
+	)
+
+	fun unknownParameterEncountered(vararg labels: String) = Failure(
 			"UNKNOWN_PARAMETER_ENCOUNTERED",
-			"@${parameterNameLabels.toList()}: unknown parameter(s) encountered"
+			"@${labels.toList()}: unknown parameter(s) encountered"
+	)
+
+	fun detectionFailed(command: String, message: String) = Failure(
+			"DETECTION_FAILED",
+			"Detection failed at command \"${command}\"\n${message}"
 	)
 }
