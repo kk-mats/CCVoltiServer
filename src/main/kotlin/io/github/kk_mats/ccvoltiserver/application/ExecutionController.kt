@@ -1,10 +1,10 @@
 package io.github.kk_mats.ccvoltiserver.application
 
+import io.github.kk_mats.ccvoltiserver.domain.service.ExecutionService
 import io.github.kk_mats.ccvoltiserver.domain.service.ValidationService
 import io.github.kk_mats.ccvoltiserver.domain.type.Failable
-import io.github.kk_mats.ccvoltiserver.domain.type.query.DetectionQuery
+import io.github.kk_mats.ccvoltiserver.domain.type.query.RawDetectionQuery
 import io.github.kk_mats.ccvoltiserver.domain.type.response.DetectionResponse
-import io.github.kk_mats.ccvoltiserver.domain.type.succeed
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
@@ -13,15 +13,21 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("run")
 class ExecutionController {
 	@Autowired
+	lateinit var executionService: ExecutionService
+
+	@Autowired
 	lateinit var validationService: ValidationService
 
-	@RequestMapping(path = ["/"], method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
+	@RequestMapping(
+			path = ["/ccvolti", "/ccvolti/{version}"],
+			method = [RequestMethod.POST],
+			consumes = [MediaType.APPLICATION_JSON_VALUE]
+	)
 	@ResponseBody
-	fun root(@RequestBody query: DetectionQuery): Failable<DetectionResponse> {
-		val r = this.validationService.validate(query)
-		return when (r.error) {
-			null -> succeed(DetectionResponse("success!"))
-			else -> r.delegate()
-		}
+	fun root(@PathVariable("version") version: String?, @RequestBody query: RawDetectionQuery): Failable<DetectionResponse> {
+		val r = this.validationService.validate(version, query)
+		r.value ?: return r.delegate()
+
+		return this.executionService.run(r.value)
 	}
 }
