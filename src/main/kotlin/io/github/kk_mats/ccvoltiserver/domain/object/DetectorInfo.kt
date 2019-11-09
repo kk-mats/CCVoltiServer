@@ -1,6 +1,6 @@
 package io.github.kk_mats.ccvoltiserver.domain.`object`
 
-import io.github.kk_mats.ccvoltiserver.domain.type.*
+import io.github.kk_mats.ccvoltiserver.domain.type.Label
 import io.github.kk_mats.ccvoltiserver.domain.type.limitation.*
 
 object DetectorInfo {
@@ -21,10 +21,10 @@ object DetectorInfo {
 	)
 
 	val regexLimitations = hashSetOf(
-			RegexLimitation(Label("-oc", "output csv"), false, Regex("""[\w-_\.\\//]+""")),
-			RegexLimitation(Label("-ot", "output txt"), false, Regex("""[\w-_\.\\//]+""")),
-			RegexLimitation(Label("-on", "output notifier"), false, Regex("""[\w-_\.\\//]+""")),
-			RegexLimitation(Label("-ocs", "output cloneset"), false, Regex("""[\w-_\.\\//]+"""))
+			RegexLimitation(Label("-oc", "output csv"), Regex("""[\w-_\.\\//]+""")),
+			RegexLimitation(Label("-ot", "output txt"), Regex("""[\w-_\.\\//]+""")),
+			RegexLimitation(Label("-on", "output notifier"), Regex("""[\w-_\.\\//]+""")),
+			RegexLimitation(Label("-ocs", "output cloneset"), Regex("""[\w-_\.\\//]+"""))
 	)
 
 	val variantLimitations = hashSetOf(
