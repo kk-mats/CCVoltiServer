@@ -21,10 +21,10 @@ object DetectorInfo {
 	)
 
 	val regexLimitations = hashSetOf(
-			RegexLimitation(Label("-oc", "output csv"), Regex("""[\w-_\.\\//]+""")),
-			RegexLimitation(Label("-ot", "output txt"), Regex("""[\w-_\.\\//]+""")),
-			RegexLimitation(Label("-on", "output notifier"), Regex("""[\w-_\.\\//]+""")),
-			RegexLimitation(Label("-ocs", "output cloneset"), Regex("""[\w-_\.\\//]+"""))
+			RegexLimitation(Label("-oc", "output csv"), Regex("""[\w-_\.\\//]+"""), "output-csv.csv"),
+			RegexLimitation(Label("-ot", "output txt"), Regex("""[\w-_\.\\//]+"""), "output-txt.txt"),
+			RegexLimitation(Label("-on", "output notifier"), Regex("""[\w-_\.\\//]+"""), "output-notifier"),
+			RegexLimitation(Label("-ocs", "output cloneset"), Regex("""[\w-_\.\\//]+"""), "output-cloneset")
 	)
 
 	val variantLimitations = hashSetOf(
