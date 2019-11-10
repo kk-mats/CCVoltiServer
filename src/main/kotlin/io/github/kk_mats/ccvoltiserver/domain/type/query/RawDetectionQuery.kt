@@ -2,10 +2,12 @@ package io.github.kk_mats.ccvoltiserver.domain.type.query
 
 import io.github.kk_mats.ccvoltiserver.domain.type.Label
 
-data class RawDetectionQuery(val target: String, val output: String, val parameters: HashMap<String, String>)
+data class TargetPath(val relative: String, val absolute: String);
+
+data class RawDetectionQuery(val target: TargetPath, val output: String, val parameters: HashMap<String, String>)
 
 data class DetectionQuery(
-		val target: String,
+		val target: TargetPath,
 		val output: String,
 		val version: Label,
 		val parameters: HashMap<Label, String>
