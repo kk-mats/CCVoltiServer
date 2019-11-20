@@ -20,8 +20,7 @@ class ValidationService {
 
 		val v = this.detectorInfoRepository.version().validate(
 				when (version) {
-					null -> null
-					else -> Label(version)
+					null -> null; else -> Label(version)
 				}
 		)
 		v.value ?: return v.delegate()
