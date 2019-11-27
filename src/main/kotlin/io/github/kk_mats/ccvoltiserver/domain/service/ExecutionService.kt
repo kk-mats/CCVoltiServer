@@ -28,7 +28,7 @@ class ExecutionService {
 			val ll = Label(l)
 			val value = query.parameters[ll]
 			if (value != null) {
-				query.parameters[Label(l)] = output.resolve(value).toString()
+				query.parameters[ll] = output.resolve(value).toString()
 			}
 		}
 
