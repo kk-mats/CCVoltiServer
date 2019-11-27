@@ -22,7 +22,7 @@ class ExecutionService {
 	val queryWriter: ObjectWriter = ObjectMapper().writer(DefaultPrettyPrinter())
 
 	fun run(query: DetectionQuery): Failable<DetectionResponse> {
-		val output = Files.createTempDirectory(Paths.get(query.output), null);
+		val output = Paths.get(query.output)
 
 		for (l in listOf("-oc", "-ot", "-on", "-ocs")) {
 			val ll = Label(l)
