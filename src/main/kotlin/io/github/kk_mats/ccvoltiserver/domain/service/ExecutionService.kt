@@ -19,8 +19,6 @@ class ExecutionService {
 	@Autowired
 	lateinit var detectorInfoRepository: DetectorInfoRepository
 
-	val queryWriter: ObjectWriter = ObjectMapper().writer(DefaultPrettyPrinter())
-
 	fun run(query: DetectionQuery): Failable<DetectionResponse> {
 		val output = Paths.get(query.output)
 
@@ -49,8 +47,6 @@ class ExecutionService {
 		if (ins.exitCode != 0) {
 			return fail(FailureCode.detectionFailed("java ${options.joinToString(" ")}", ins.input.toString()))
 		}
-
-		this.queryWriter.writeValue(output.resolve("query.json").toFile(), query);
 
 		return succeed(DetectionResponse(output.fileName.toString(), output.toString(), listOf(), ins.input.toString()))
 	}
