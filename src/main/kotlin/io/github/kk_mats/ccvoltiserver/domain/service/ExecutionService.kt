@@ -33,7 +33,7 @@ class ExecutionService {
 		}
 
 		query.parameters[Label("-jar", Int.MAX_VALUE)] = query.version.option
-		query.parameters[Label("-d", Int.MAX_VALUE - 1)] = query.target.absolute
+		query.parameters[Label("-d", Int.MAX_VALUE - 1)] = query.target.directory.absolute
 
 		val options = query.parameters.toList()
 				.sortedWith(kotlin.Comparator { l1, l2 -> l2.first.priority.compareTo(l1.first.priority) })

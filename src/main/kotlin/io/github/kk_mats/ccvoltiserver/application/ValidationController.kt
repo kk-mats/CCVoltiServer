@@ -2,8 +2,8 @@ package io.github.kk_mats.ccvoltiserver.application
 
 import io.github.kk_mats.ccvoltiserver.domain.service.ValidationService
 import io.github.kk_mats.ccvoltiserver.domain.type.Failable
-import io.github.kk_mats.ccvoltiserver.domain.type.query.RawDetectionQuery
-import io.github.kk_mats.ccvoltiserver.domain.type.query.TargetPath
+import io.github.kk_mats.ccvoltiserver.domain.type.query.*
+import io.github.kk_mats.ccvoltiserver.domain.type.query.Target
 import io.github.kk_mats.ccvoltiserver.domain.type.succeed
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -22,7 +22,7 @@ class ValidationController {
 	)
 	@ResponseBody
 	fun root(@PathVariable("version") version: String?, @RequestBody parameters: HashMap<String, String>): Failable<Boolean> {
-		val r = this.validationService.validate(version, RawDetectionQuery(TargetPath("", ""), "", parameters))
+		val r = this.validationService.validate(version, RawDetectionQuery(Target(Directory("", ""), Revision("", "")), "", parameters))
 		if (r.value == null) {
 			return r.delegate()
 		}
