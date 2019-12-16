@@ -19,21 +19,19 @@ class ExecutionService {
 	@Autowired
 	lateinit var detectorInfoRepository: DetectorInfoRepository
 
-	val queryWriter: ObjectWriter = ObjectMapper().writer(DefaultPrettyPrinter())
-
 	fun run(query: DetectionQuery): Failable<DetectionResponse> {
-		val output = Files.createTempDirectory(Paths.get(query.output), null);
+		val output = Paths.get(query.output)
 
 		for (l in listOf("-oc", "-ot", "-on", "-ocs")) {
 			val ll = Label(l)
 			val value = query.parameters[ll]
 			if (value != null) {
-				query.parameters[Label(l)] = output.resolve(value).toString()
+				query.parameters[ll] = output.resolve(value).toString()
 			}
 		}
 
 		query.parameters[Label("-jar", Int.MAX_VALUE)] = query.version.option
-		query.parameters[Label("-d", Int.MAX_VALUE - 1)] = query.target.absolute
+		query.parameters[Label("-d", Int.MAX_VALUE - 1)] = query.target.directory.absolute
 
 		val options = query.parameters.toList()
 				.sortedWith(kotlin.Comparator { l1, l2 -> l2.first.priority.compareTo(l1.first.priority) })
@@ -49,8 +47,6 @@ class ExecutionService {
 		if (ins.exitCode != 0) {
 			return fail(FailureCode.detectionFailed("java ${options.joinToString(" ")}", ins.input.toString()))
 		}
-
-		this.queryWriter.writeValue(output.resolve("query.json").toFile(), query);
 
 		return succeed(DetectionResponse(output.fileName.toString(), output.toString(), listOf(), ins.input.toString()))
 	}
